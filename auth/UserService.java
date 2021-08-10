@@ -9,6 +9,13 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
     //UserServiceImpl getAllUsers
 
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    private UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String userMail) throws UsernameNotFoundException {
         //getAllUsers içerisinde userMail mevcut mu?

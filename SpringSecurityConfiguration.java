@@ -22,7 +22,10 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public void configurePasswordEncoder(AuthenticationManagerBuilder builder){
         //pass encoder
+        authenticationManagerBuilder.UserService(userService).passwordEncoder(getBCryptPasswordEncoder());
     }
+
+    private UserService userService;
 
     public BCryptPasswordEncoder getBCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
@@ -33,9 +36,20 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-   protected  void configure(HttpSecurity http){
+   protected void configure(HttpSecurity http) throws Exception {
         //metotlar için role izinleri olacak
        //Örneğin get api'leri için User post,put,delete,get Admin
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/book").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/magazine").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/newspaper").hasRole("USER")
+                .antMatchers("/deposits", "/admin").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/book").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/magazine").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/newspaper").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/user").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/book", "/magazine", "/newspaper", "/user").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/user", "/book", "/magazine", "/newspaper").hasRole("ADMIN")
 
        //jwtTokenFilter
        //http.addFilterBefore(jwtTokenFilter,);
