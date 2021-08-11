@@ -1,8 +1,11 @@
+
 package com.libraryapp.libraryapp;
 
 import com.libraryapp.libraryapp.auth.JwtTokenFilter;
+import com.libraryapp.libraryapp.auth.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -26,7 +29,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         authenticationManagerBuilder.UserService(userService).passwordEncoder(getBCryptPasswordEncoder());
     }
 
-    private UserService userService;
+    private UserDetailsService userService;
 
     public BCryptPasswordEncoder getBCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
@@ -37,9 +40,9 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-   protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
         //metotlar için role izinleri olacak
-       //Örneğin get api'leri için User post,put,delete,get Admin
+        //Örneğin get api'leri için User post,put,delete,get Admin
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/book").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/magazine").hasRole("USER")
@@ -52,7 +55,8 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/book", "/magazine", "/newspaper", "/user").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/user", "/book", "/magazine", "/newspaper").hasRole("ADMIN")
 
-       //jwtTokenFilter
-       //http.addFilterBefore(jwtTokenFilter,);
-   }
+        //jwtTokenFilter
+        //http.addFilterBefore(jwtTokenFilter,);
+    }
+}
 }
