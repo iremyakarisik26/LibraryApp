@@ -1,11 +1,13 @@
 package com.libraryapp.libraryapp.auth;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import lombok.Value;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.*;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.security.KeyStore;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,19 +25,24 @@ public class TokenManager {
      */
     private static final long serialVersionUID = -2550185165626007488L;
 
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 1000;
+    public static final int validity = 5 * 60 * 1000;
 
-    @Value("${jwt.secret}")
-    private String secret;
-
+    Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     public String getUsermailFromToken(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
+        Claims claims=getClaims(token);
+        return claims.getSubject();
     }
 
-    public String generateToken(UserDetails userDetails) {
 
-        Map<String, Object> claims = new HashMap<>();
-        return GenerateToken(claims, userDetails.getUsermail());
+    public String generateToken(String userMail) {
+
+      return  Jwts.builder()
+              .setSubject(userMail)
+              .setIssuer("libraryapp.com") // hangi uygulama için oluştuğu?
+              .setIssuedAt(new Date(System.currentTimeMillis())) // ne zaman bilgisi
+              .setExpiration(new Date(System.currentTimeMillis()+validity)) //oluştuğu zaman ve expired date'i (now+5dk)
+              .signWith(key) // key buraya verilecek
+              .compact();
     }
 
     private Boolean isTokenExpired(String token) {
@@ -49,7 +56,7 @@ public class TokenManager {
     }
 
     private Claims getClaims(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
 }
