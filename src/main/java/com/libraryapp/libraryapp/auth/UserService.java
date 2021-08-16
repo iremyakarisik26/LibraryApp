@@ -1,36 +1,43 @@
 package com.libraryapp.libraryapp.auth;
 
+import com.libraryapp.libraryapp.services.IUserService;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.libraryapp.libraryapp.dto.UserDto;
-import com.libraryapp.libraryapp.repos.UserRepository;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class UserService implements UserDetailsService {
-    //UserServiceImpl getAllUsers
 
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    private UserRepository userRepository;
+    private IUserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String userMail) throws UsernameNotFoundException {
-        //getAllUsers içerisinde userMail mevcut mu?
-        //UserDto type'da dönülecek.
+        //1. getAllUsers içerisinde userMail mevcut mu? _> userMail için Contains
 
-        final Optional<User> oUser; // = ???
-        if (oUser.isPresent()) {
-            return UserDto of (oUser); //???
+        boolean hasUser = userService.getAllUsers().stream()
+                .map(UserDto::getUserMail)
+                .anyMatch(item -> item.contains(userMail));
+
+        if (hasUser) {
+
         }
-        else {
-            throw new UsernameNotFoundException(MessageFormat.format("User with e-mail {0} does not exist", userMail));
-        }
+
+
+        //2. service açılıp repodan bu userMail bilgisiyle bir kayıt mevcut mu
+        /**
+         *  UserDto user= userService.getOneUser(userMail);
+         *         if(Objects.nonNull(user)){
+         *
+         *         }
+          */
+
+        //UserDto type'da dönülecek.
         return null;
     }
 }

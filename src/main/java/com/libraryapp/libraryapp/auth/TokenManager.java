@@ -15,14 +15,6 @@ import java.util.Objects;
 
 @Service
 public class TokenManager {
-
-    /**
-     * HS256 olacak şekilde bir key oluşturulmalı
-     * private Key key  =??
-     * <p>
-     * Token expired için 5 dakika
-     * private final int expirationTime = 5*60*1000;
-     */
     private static final long serialVersionUID = -2550185165626007488L;
 
     public static final int validity = 5 * 60 * 1000;
@@ -35,12 +27,12 @@ public class TokenManager {
 
 
     public String generateToken(String userMail) {
-
-      return  Jwts.builder()
+        final long currentTimeMillis =  System.currentTimeMillis();
+        return  Jwts.builder()
               .setSubject(userMail)
               .setIssuer("libraryapp.com") // hangi uygulama için oluştuğu?
-              .setIssuedAt(new Date(System.currentTimeMillis())) // ne zaman bilgisi
-              .setExpiration(new Date(System.currentTimeMillis()+validity)) //oluştuğu zaman ve expired date'i (now+5dk)
+              .setIssuedAt(new Date(currentTimeMillis)) // ne zaman bilgisi
+              .setExpiration(new Date(currentTimeMillis + validity)) //oluştuğu zaman ve expired date'i (now+5dk)
               .signWith(key) // key buraya verilecek
               .compact();
     }

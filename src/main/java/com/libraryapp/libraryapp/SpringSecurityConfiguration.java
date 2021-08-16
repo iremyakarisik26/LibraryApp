@@ -25,7 +25,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public void configurePasswordEncoder(AuthenticationManagerBuilder builder){
         //pass encoder
-        authenticationManagerBuilder.UserService(userService).passwordEncoder(getBCryptPasswordEncoder());
+        //authenticationManagerBuilder.UserService(userService).passwordEncoder(getBCryptPasswordEncoder());
     }
 
     private UserService userService;
@@ -52,10 +52,9 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/newspaper").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/user").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/book", "/magazine", "/newspaper", "/user").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/user", "/book", "/magazine", "/newspaper").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/user", "/book", "/magazine", "/newspaper").hasRole("ADMIN");
 
         //jwtTokenFilter
         //http.addFilterBefore(jwtTokenFilter,);
     }
-}
 }

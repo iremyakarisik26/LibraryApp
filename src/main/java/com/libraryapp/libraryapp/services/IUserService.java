@@ -13,6 +13,7 @@ public interface IUserService {
     List<UserDto> getAllUsers();
     void saveOneUser(UserDto newUser);
     UserDto getOneUser(Long userId) throws NotFoundException;
+    UserDto getOneUser(String userMail);
     UserDto updateOneUser(Long userId, UserDto newUser) throws NotFoundException;
     void deleteById(Long userId);
 

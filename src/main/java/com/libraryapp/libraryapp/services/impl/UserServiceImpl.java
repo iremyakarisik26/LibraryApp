@@ -5,6 +5,7 @@ import com.libraryapp.libraryapp.entities.User;
 import com.libraryapp.libraryapp.repos.UserRepository;
 import com.libraryapp.libraryapp.services.IUserService;
 import javassist.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +14,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements IUserService {
+    @Autowired
     private UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public List<UserDto> getAllUsers() {
@@ -37,6 +35,13 @@ public class UserServiceImpl implements IUserService {
                .orElseThrow(() -> new NotFoundException("User Not Found"));
         return UserDto.of(foundUser);
 
+    }
+
+    @Override
+    public UserDto getOneUser(String userMail) {
+        final User foundUser= userRepository.findByMail(userMail);
+
+        return UserDto.of(foundUser);
     }
 
     @Override

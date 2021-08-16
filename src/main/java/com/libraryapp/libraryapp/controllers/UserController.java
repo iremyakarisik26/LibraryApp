@@ -3,9 +3,9 @@ package com.libraryapp.libraryapp.controllers;
 import java.util.List;
 
 import com.libraryapp.libraryapp.dto.UserDto;
-import com.libraryapp.libraryapp.services.impl.UserServiceImpl;
+import com.libraryapp.libraryapp.services.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,19 +15,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.libraryapp.libraryapp.entities.User;
 
 import javassist.NotFoundException;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-	
-	private UserServiceImpl userService;
-	
-	public UserController(UserServiceImpl userService) {
-		this.userService=userService;
-	}
+
+	@Autowired
+	private IUserService userService;
 
 	@GetMapping
 	public List<UserDto> getAllUsers(){
