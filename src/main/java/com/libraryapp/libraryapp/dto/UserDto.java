@@ -11,14 +11,14 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 public class UserDto implements Serializable {
-    //jwt token
-    //stream
-   //spring security
+
     Long id;
     String userMail;
     String userPassword;
+    //String role;//Admin veya User
 
     public static UserDto of (User user){
         return new UserDto(user.getId(),user.getUserMail(),user.getUserPassword());
     }
+
 }

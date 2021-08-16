@@ -3,6 +3,8 @@ package com.libraryapp.libraryapp.entities;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.libraryapp.libraryapp.dto.BookDto;
+import com.libraryapp.libraryapp.dto.UserDto;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -25,10 +27,15 @@ public class Book {
 	
 	String bookPage;
 
-	@ManyToOne(fetch = LAZY) // bir çok kitabın 1 user olabilir
-	@JoinColumn(name="user_id",nullable = false) //bağlama amaçlı ve boş olmamalı
-	@OnDelete(action= OnDeleteAction.CASCADE) // bir user silindiğinde her şeyi silinsin
-	@JsonIgnore
-	User user;
 
+
+	private Book (String bookName, String bookAuthor, String bookPage){
+		this.bookName=bookName;
+		this.bookAuthor=bookAuthor;
+		this.bookPage=bookPage;
+	}
+
+
+	Book book ;
+	public static Book of(BookDto bookDto){return new Book(bookDto.getBookName(),bookDto.getBookAuthor(),bookDto.getBookPage());}
 }

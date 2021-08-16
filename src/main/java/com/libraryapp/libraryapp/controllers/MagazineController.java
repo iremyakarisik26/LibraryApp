@@ -2,25 +2,35 @@ package com.libraryapp.libraryapp.controllers;
 
 import java.util.List;
 
+import com.libraryapp.libraryapp.dto.MagazineDto;
 import com.libraryapp.libraryapp.repos.MagazineRepository;
+import com.libraryapp.libraryapp.services.impl.MagazineServiceImpl;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.libraryapp.libraryapp.entities.Magazine;
+
 
 @RestController
 @RequestMapping("/magazine")
 public class MagazineController {
 
 	private MagazineRepository magazineRepository;
+	private MagazineServiceImpl magazineService;
 	
-	public MagazineController() {
-		this.magazineRepository=magazineRepository;
+	public MagazineController(MagazineServiceImpl magazineService) {
+		this.magazineService=magazineService;
 	}
 	
 	@GetMapping
-	public List<Magazine> getAllMagazines(){
-		return magazineRepository.findAll();
+	public List<MagazineDto> getAllMagazines(){
+		return magazineService.getAllMagazines();
 	}
+
+	@PostMapping
+	public void saveMagazines(MagazineDto newMagazine){
+		magazineService.saveMagazines(newMagazine);
+	}
+
 }

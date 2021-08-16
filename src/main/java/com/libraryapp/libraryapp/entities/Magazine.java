@@ -3,6 +3,7 @@ package com.libraryapp.libraryapp.entities;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.libraryapp.libraryapp.dto.MagazineDto;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -33,6 +34,10 @@ public class Magazine {
 	@JoinColumn(name="user_id",nullable = false) //bağlama amaçlı ve boş olmamalı
 	@OnDelete(action= OnDeleteAction.CASCADE) // bir user silindiğinde her şeyi silinsin
 	@JsonIgnore    //niye bilmiyorum , raşit beye sor.
-	User user;
 
+
+	Magazine magazine;
+	public static Magazine of(MagazineDto magazineDto){
+		return new Magazine(magazineDto.getMagazineName(),magazineDto.getMagazineAuthor(),magazineDto.getMagazineMonth(),magazineDto.getMagazinePage());
+	}
 }
