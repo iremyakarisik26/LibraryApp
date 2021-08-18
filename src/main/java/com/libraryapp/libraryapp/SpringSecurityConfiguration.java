@@ -12,7 +12,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -43,18 +45,18 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         //metotlar için role izinleri olacak
         //Örneğin get api'leri için User post,put,delete,get Admin
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/book").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "/magazine").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "/newspaper").hasRole("USER")
-                .antMatchers("/deposits", "/admin").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/book").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/magazine").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/newspaper").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/user").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/book", "/magazine", "/newspaper", "/user").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/user", "/book", "/magazine", "/newspaper").hasRole("ADMIN");
+                .antMatchers(HttpMethod.GET).hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.POST).hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE).hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.PUT).hasAnyRole("ADMIN")
+                .anyRequest().authenticated()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+            http.cors().disable();
+            http.csrf().disable();
 
         //jwtTokenFilter
-        //http.addFilterBefore(jwtTokenFilter,);
+        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
 }

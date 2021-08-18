@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 
-
+//findbymail query
     //Query doldurulacak.
     @Query()
     User findByMail(String mail);

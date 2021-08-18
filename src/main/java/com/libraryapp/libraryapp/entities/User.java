@@ -20,14 +20,16 @@ public class User {
 	Long id;
 	String userMail;
 	String userPassword;
+	String role;
 
-	private User (String userMail, String userPassword){
+	private User (String userMail, String userPassword, String role){
 		this.userMail = userMail;
 		this.userPassword = userPassword;
+		this.role = role;
 	}
 
 	public static User of (UserDto userDto){
-		return new User(userDto.getUserMail(),userDto.getUserPassword());
+		return new User(userDto.getUserMail(),userDto.getUserPassword(),userDto.getRole());
 	}
 
 
